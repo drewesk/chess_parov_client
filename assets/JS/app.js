@@ -1,13 +1,14 @@
-const API_URL = ifLocalURL();
-
+const userArticles = []
 $(document).ready(() => {
   const params = parseQuery(window.location.search);
 
   getUser(params.id)
-  .then(addUserInfo)
+  .then(addUser)
   .then(getArticles)
   .then(addArticles)
   .catch(alert('user not found'));
+
+  console.log(getArticles(params.id));
 
 });
 
@@ -23,7 +24,7 @@ function getUser(id) {
 }
 
 function getArticles(id) {
-  return $.get(`${API_URL}/user/${id}/article`);
+  return $.get(`${API_URL}/user/${id}/articles`);
 }
 
 function addUser(user) {
@@ -38,12 +39,8 @@ function addUser(user) {
 function addArticles(articles) {
   let source = $("#article-template").html();
   let template = Handlebars.compile(source);
-  let context = {stickers};
+  let context = {articles};
   let html = template(context);
+  console.log(html);
   $('.articles').html(html);
-}
-
-function ifLocalURL() {
-  let localHost = window.location.host.indexOf('localhost') != -1;
-  (localHost) ? 'http://localhost:3000' : alert("Error can't find port 3000");
 }
